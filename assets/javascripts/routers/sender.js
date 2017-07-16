@@ -1,13 +1,8 @@
-const _ = require("underscore")
-const Backbone = require("backbone")
-
 const LobbyView = require("../views/lobby")
 const CastStateModel = require("../models/cast_state")
 
 module.exports = class Sender {
   constructor() {
-    _.extend(this, Backbone.Events)
-
     this.castState = new CastStateModel()
 
     window.__onGCastApiAvailable = this.registerIfAvailable.bind(this)
@@ -36,6 +31,7 @@ module.exports = class Sender {
   registerEventHanders() {
     const types = cast.framework.CastContextEventType
 
+    this.castState.setState(this.castContext.getCastState())
     this.castContext.addEventListener(types.CAST_STATE_CHANGED, (evt) => {
       this.castState.setState(evt.castState)
     })

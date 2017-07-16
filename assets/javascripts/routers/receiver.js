@@ -1,8 +1,11 @@
 module.exports = class Receiver {
+  constructor() {
+    this.startReceiver()
+  }
 
   startReceiver() {
-    this.castReceiver = cast.receiver.CastReceiverManager.getInstance()
-    this.castReceiver.start()
+    this.castReceiverManager = cast.receiver.CastReceiverManager.getInstance()
+    this.castReceiverManager.start()
   }
 
 }
