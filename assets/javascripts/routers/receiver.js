@@ -1,5 +1,6 @@
 module.exports = class Receiver {
   constructor() {
+    cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG)
     this.startReceiver()
   }
 
