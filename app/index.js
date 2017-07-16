@@ -59,6 +59,8 @@ ws.on("connection", (ws, req) => {
 
     if (message.type === "join_room") {
       sockets.join(ws, message.data.room_id)
+      const in_room = sockets.in(message.data.room_id)
+      sockets.broadcast(in_room, JSON.stringify({type: "room_count", data: { room_count: in_room.length }}))
       return
     }
   })

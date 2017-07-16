@@ -18,6 +18,12 @@ module.exports = class Sockets {
     return this.sockets.filter((s) => s.room === room)
   }
 
+  broadcast(sockets, message) {
+    sockets.forEach((s) => {
+      s.socket.send(message)
+    })
+  }
+
   remove(socket) {
     const item = this.sockets.find((s) => s.socket === socket)
     this.sockets.splice(this.sockets.indexOf(item), 1)

@@ -40,6 +40,13 @@ module.exports = class Receiver {
 
       if (message.type === "room_id") {
         this.room.set("id", message.data.room_id)
+        this.ws.send(JSON.stringify({type: "join_room", data: { room_id: message.data.room_id }}))
+        return
+      }
+
+      if (message.type === "room_count") {
+        this.room.set("count", message.data.room_count)
+        return
       }
     })
   }
