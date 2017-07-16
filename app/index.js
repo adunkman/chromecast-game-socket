@@ -15,17 +15,6 @@ app.set("view engine", "hbs")
 
 app.disable("x-powered-by")
 
-app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", [
-    "default-src 'none'",
-    `script-src ${[
-      "'self'",
-      isProduction ? "https://www.gstatic.com" : "http://www.gstatic.com"
-    ].join(" ")}`
-  ].join("; "))
-  next()
-})
-
 app.get("/assets/index.js", require("connect-browserify")({
   entry: "assets/javascripts/index.js",
   extensions: [".js", ".hbs"],

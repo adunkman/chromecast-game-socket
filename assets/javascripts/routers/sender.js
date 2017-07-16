@@ -52,5 +52,7 @@ module.exports = class Sender {
     }
 
     this.castContext.requestSession()
+      .then((evt) => console.log("then", evt))
+      .catch((evt) => console.log("catch", evt))
   }
 }
