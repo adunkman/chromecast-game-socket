@@ -4,7 +4,7 @@ module.exports = Backbone.View.extend({
   template: require("../templates/cast_button"),
 
   events: {
-    "click": "cast_if_available"
+    "click": "castIfAvailable"
   },
 
   initialize({router}) {
@@ -13,10 +13,10 @@ module.exports = Backbone.View.extend({
   },
 
   render() {
-    this.$el.html(this.template(this.render_attrs()))
+    this.$el.html(this.template(this.renderAttrs()))
   },
 
-  render_attrs() {
+  renderAttrs() {
     return {
       is_casting: this.model.isCasting(),
       is_connecting: this.model.isConnecting(),
@@ -26,7 +26,7 @@ module.exports = Backbone.View.extend({
     }
   },
 
-  cast_if_available() {
+  castIfAvailable() {
     if (!this.model.canCast()) { return; }
     this.router.requestSession()
   }
