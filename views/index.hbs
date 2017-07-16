@@ -1,7 +1,20 @@
-<h1>Hello world!</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="referrer" content="origin">
+    <meta name="format-detection" content="telephone=no">
+    <!--link rel="shortcut icon" href="{% asset_path favicon.png %}"-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{{#if is_chromecast}}
-  <script data-chromecast="receiver" src="https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
-{{else}}
-  <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
-{{/if}}
+    {{#if is_chromecast}}
+      <script data-chromecast="receiver" src="https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+    {{/if}}
+    <script src="/assets/index.js"></script>
+    {{#unless is_chromecast}}
+      <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+    {{/unless}}
+  </head>
+  <body>
+  </body>
+</html>

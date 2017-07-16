@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000
 const isProduction = process.env.NODE_ENV === "production"
 
 app.engine("hbs", require("express-handlebars")({
-  defaultLayout: "main",
+  defaultLayout: false,
   extname: "hbs"
 }))
 app.set("view engine", "hbs")
@@ -28,6 +28,10 @@ app.use((req, res, next) => {
 
 app.get("/assets/index.js", require("connect-browserify")({
   entry: "assets/javascripts/index.js",
+  extensions: [".js", ".hbs"],
+  transforms: [
+    require("hbsfy").configure({extensions: ["hbs"]})
+  ],
   debug: !isProduction
 }))
 
