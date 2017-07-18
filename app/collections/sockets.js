@@ -18,6 +18,10 @@ module.exports = class Sockets {
     return this.sockets.filter((s) => s.room === room)
   }
 
+  all() {
+    return this.sockets
+  }
+
   broadcast(sockets, message) {
     sockets.forEach((s) => {
       s.socket.send(message)

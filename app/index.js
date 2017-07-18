@@ -66,4 +66,8 @@ ws.on("connection", (ws, req) => {
   })
 })
 
+setInterval(() => {
+  sockets.broadcast(sockets.all(), JSON.stringify({type: "hello", data: { hi: "👋" }}))
+}, 30000)
+
 server.listen(port, () => console.log("server listening", server.address()))

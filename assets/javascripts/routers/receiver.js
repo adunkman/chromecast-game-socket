@@ -1,5 +1,3 @@
-const ReconnectingWebsocket = require("reconnectingwebsocket")
-
 const RoomModel = require("../models/room")
 const DebugView = require("../views/debug")
 
@@ -7,10 +5,12 @@ module.exports = class Receiver {
   constructor() {
     cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG)
 
-    this.room = new RoomModel()
+    this.room = new RoomModel({path: "/receiver"})
+    this.room.on("ws:open", this.createRoomIfNeeded.bind(this))
+    this.room.on("ws:room_id", this.setRoomId.bind(this))
+    this.room.on("ws:room_count", this.setRoomCount.bind(this))
 
     this.startReceiver()
-    this.startWebsocket()
 
     document.addEventListener("DOMContentLoaded", this.initializeViews.bind(this))
   }
@@ -20,35 +20,18 @@ module.exports = class Receiver {
     this.castReceiverManager.start()
   }
 
-  startWebsocket() {
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
-    const host = window.location.host
-    this.ws = new ReconnectingWebsocket(`${protocol}//${host}/receiver`)
+  createRoomIfNeeded() {
+    if (!this.room.id) {
+      this.room.send("generate_room_id")
+    }
+  }
 
-    this.ws.addEventListener("open", () => {
-      if (!this.room.id) {
-        this.ws.send(JSON.stringify({type: "generate_room_id"}))
-      }
-    })
+  setRoomId(message) {
+    this.room.set("id", message.room_id)
+  }
 
-    this.ws.addEventListener("message", (evt) => {
-      var message;
-      try { message = JSON.parse(evt.data) }
-      catch (e) {}
-
-      if (!message || !message.type) { return }
-
-      if (message.type === "room_id") {
-        this.room.set("id", message.data.room_id)
-        this.ws.send(JSON.stringify({type: "join_room", data: { room_id: message.data.room_id }}))
-        return
-      }
-
-      if (message.type === "room_count") {
-        this.room.set("count", message.data.room_count)
-        return
-      }
-    })
+  setRoomCount(message) {
+    this.room.set("count", message.room_count)
   }
 
   initializeViews() {
