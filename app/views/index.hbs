@@ -7,6 +7,8 @@
     <!--link rel="shortcut icon" href="{% asset_path favicon.png %}"-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" href="/assets/index.css">
+
     {{#if is_chromecast}}
       <script data-chromecast="receiver" src="https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     {{/if}}
@@ -15,6 +17,6 @@
       <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
     {{/unless}}
   </head>
-  <body>
+  <body class="{{#if is_chromecast}}is-receiver{{else}}is-sender{{/if}}">
   </body>
 </html>
