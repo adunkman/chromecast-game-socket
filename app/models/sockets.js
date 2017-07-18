@@ -22,10 +22,12 @@ module.exports = class Sockets {
     return this.sockets
   }
 
-  broadcast(sockets, message) {
-    sockets.forEach((s) => {
-      s.socket.send(message)
-    })
+  send(socket, type, data) {
+    socket.send(JSON.stringify({type, data}))
+  }
+
+  broadcast(sockets, type, data) {
+    sockets.forEach((s) => this.send(s.socket, type, data))
   }
 
   remove(socket) {

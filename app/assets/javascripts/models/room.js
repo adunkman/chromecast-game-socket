@@ -22,11 +22,13 @@ module.exports = Backbone.Model.extend({
   },
 
   parseMessageAndTrigger({data}) {
-    try { data = JSON.parse(data) }
-    catch (e) { return console.error(e) }
-    if (!data.type) { return }
+    var message;
 
-    this.trigger(`ws:${data.type}`, data)
+    try { message = JSON.parse(data) }
+    catch (e) { return console.error(e) }
+    if (!message.type) { return }
+
+    this.trigger(`ws:${message.type}`, message.data)
   },
 
   send(type, data = {}) {
