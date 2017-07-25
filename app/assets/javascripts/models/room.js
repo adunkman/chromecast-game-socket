@@ -1,12 +1,14 @@
 const ReconnectingWebsocket = require("reconnectingwebsocket")
 const Backbone = require("backbone")
+const uuidv4 = require("uuid/v4")
 
 module.exports = Backbone.Model.extend({
   protocol: window.location.protocol === "https:" ? "wss:" : "ws:",
   host: window.location.host,
 
   initialize({path}) {
-    this.ws = new ReconnectingWebsocket(`${this.protocol}//${this.host}${path}`)
+    this.clientId = this.loadOrDefineClientId()
+    this.ws = new ReconnectingWebsocket(`${this.protocol}//${this.host}${path}?client_id=${this.clientId}`)
 
     this.ws.addEventListener("open", this.joinIfIdSet.bind(this))
     this.ws.addEventListener("open", this.trigger.bind(this, "ws:open"))
@@ -14,6 +16,21 @@ module.exports = Backbone.Model.extend({
     this.ws.addEventListener("message", this.parseMessageAndTrigger.bind(this))
 
     this.on("change:id", this.joinIfIdSet.bind(this))
+  },
+
+  loadOrDefineClientId() {
+    const keyName = "client_id"
+    const storedValue = localStorage.getItem(keyName)
+    if (storedValue) { return storedValue }
+
+    const newId = uuidv4()
+    try { localStorage.setItem(keyName, newId) }
+    catch (e) {}
+    return newId
+  },
+
+  join(id) {
+
   },
 
   joinIfIdSet() {

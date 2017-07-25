@@ -22,7 +22,7 @@ module.exports = class Receiver {
 
   createRoomIfNeeded() {
     if (!this.room.id) {
-      this.room.send("generate_room_id")
+      this.room.send("create_room")
     }
   }
 

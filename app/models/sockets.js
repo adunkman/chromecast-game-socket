@@ -26,10 +26,6 @@ module.exports = class Sockets {
     socket.send(JSON.stringify({type, data}))
   }
 
-  broadcast(sockets, type, data) {
-    sockets.forEach((s) => this.send(s.socket, type, data))
-  }
-
   remove(socket) {
     const item = this.sockets.find((s) => s.socket === socket)
     this.sockets.splice(this.sockets.indexOf(item), 1)
