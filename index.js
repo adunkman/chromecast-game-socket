@@ -1,24 +1,20 @@
-const http = require("http")
-const WebSocket = require("ws")
-const express = require("express")
-const log = require("bunyan").createLogger({ name: "server" })
-const app = express()
-const server = http.createServer(app)
-const ws = new WebSocket.Server({server})
+const Hapi = require("hapi")
+const Nes = require("nes")
 
-const port = process.env.PORT || 3000
+const server = new Hapi.Server()
+const logger = require("bunyan").createLogger({ name: "server" })
 
-app.set("views", "app/views")
-app.set("view engine", "hbs")
-app.engine("hbs", require("express-handlebars")({
-  defaultLayout: false,
-  extname: "hbs"
-}))
+server.connection({
+  host: "localhost",
+  port: process.env.PORT || 3000
+})
 
-app.disable("x-powered-by")
+server.register(Nes)
+server.register({register: require("hapi-bunyan"), options: {logger}})
 
-require("./app/controllers/assets.js")(app)
-require("./app/controllers/index.js")(app)
-require("./app/controllers/ws.js")(ws)
+require("./app/controllers/rooms")(server)
 
-server.listen(port, () => log.info(server.address(), "server listening"))
+server.start((err) => {
+  if (err) { throw err }
+  logger.info(server.info, "server listening")
+})
